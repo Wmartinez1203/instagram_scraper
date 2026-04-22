@@ -1,0 +1,51 @@
+[
+  {
+    "domain": ".instagram.com",
+    "name": "datr",
+    "value": "peJBaVkS2MkNvgq9RrimdOEx",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "ig_did",
+    "value": "FD80B463-5CEE-49F7-82EF-03BFE5AC37D3",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "mid",
+    "value": "acS-nAALAAG4f6fjTC44Qu785XAW",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "csrftoken",
+    "value": "ng8QuHLrDk2UgzaQJCRX95mP9UKLwGJc",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "ds_user_id",
+    "value": "5546722445",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "sessionid",
+    "value": "5546722445%3APQiMOaCWtdoWOy%3A29%3AAYifUfbM8AO6IDxRa9MIcJ-bIIQRctzynqd6kE28cg",
+    "path": "/",
+    "secure": true
+  },
+  {
+    "domain": ".instagram.com",
+    "name": "rur",
+    "value": "\"LDC\\0545546722445\\0541808363014:01fe1d074786056ef2b78791fbd640995df4e4eded186ed0dafabbfc5f21336741be7435\"",
+    "path": "/",
+    "secure": true
+  }
+]
