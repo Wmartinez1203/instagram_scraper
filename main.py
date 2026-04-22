@@ -4,17 +4,16 @@ from src.output_manager import OutputManager
 
 
 async def main():
-    print("--- Instagram Professional Scraper (Versión Universitaria) ---")
-    target = input("Ingrese el nombre de usuario (sin @): ").strip()
+    print("--- INSTAGRAM DATA ANALYTICS (UCE 2026) ---")
+    user = input("Usuario (sin @): ").strip()
 
     scraper = ScraperEngine()
-    print("[*] Iniciando motor de extracción...")
-    raw_data = await scraper.scrape_profile(target)
+    data = await scraper.scrape_profile(user)
 
-    if raw_data:
-        OutputManager.save_data(raw_data, f"reporte_{target}")
+    if data:
+        OutputManager.save_data(data, user)
     else:
-        print("\n[X] No se pudo obtener la información. Verifica la red o el usuario.")
+        print("[X] No se pudo extraer información. Revisa la red.")
 
 
 if __name__ == "__main__":
