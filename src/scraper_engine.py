@@ -5,68 +5,68 @@ import playwright_stealth
 from .auth_manager import AuthManager
 from .data_parser import DataParser
 
-
 class ScraperEngine:
     def __init__(self):
         self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+        # --- CONFIGURACIÓN DE RED ---
+        self.USAR_PROXY = True  # CAMBIA A False CUANDO ESTÉS EN CASA
+        self.PROXY_SERVER = "http://192.168.25.222:8080"
 
     async def scrape_profile(self, username):
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=False)
+            # Lógica de conexión inteligente
+            launch_args = {"headless": False}
+            if self.USAR_PROXY:
+                launch_args["proxy"] = {"server": self.PROXY_SERVER}
+                print(f"[*] Conectando vía Proxy: {self.PROXY_SERVER}")
+            else:
+                print("[*] Conexión directa detectada (Modo Casa/Datos).")
+
+            browser = await p.chromium.launch(**launch_args)
             context = await browser.new_context(user_agent=self.user_agent)
             page = await context.new_page()
+
+            # Evitar detección básica
+            try:
+                await playwright_stealth.stealth_async(page)
+            except:
+                pass
 
             auth = AuthManager()
             await auth.load_session(context)
 
-            posts_data = []
             try:
-                print(f"[*] Accediendo a @{username}...")
-                # Cargamos la página
-                await page.goto(f"https://www.instagram.com/{username}/", wait_until="domcontentloaded", timeout=60000)
-
-                # Espera humana para que carguen las miniaturas
+                print(f"[*] Navegando al perfil: @{username}...")
+                await page.goto(f"https://www.instagram.com/{username}/", wait_until="domcontentloaded", timeout=90000)
                 await asyncio.sleep(6)
 
-                # Extraer Stats Generales
-                profile_stats = await DataParser.get_profile_stats(page)
-                print(f"[+] Seguidores detectados: {profile_stats['followers']}")
+                # Extraer estadísticas generales
+                profile_data = await DataParser.get_profile_stats(page)
+                print(f"[+] Seguidores: {profile_data['followers']} | Siguiendo: {profile_data['following']}")
 
-                # --- MEJORA AQUÍ: Esperar específicamente por los posts ---
-                print("[*] Buscando publicaciones...")
-                try:
-                    # Esperamos hasta 10 segundos a que aparezca al menos un link de post
-                    await page.wait_for_selector('article a', timeout=10000)
-                except:
-                    print("[!] Los posts tardan en cargar, forzando scroll...")
-                    await page.mouse.wheel(0, 800)
-                    await asyncio.sleep(3)
+                # Forzar carga de publicaciones
+                await page.mouse.wheel(0, 800)
+                await asyncio.sleep(3)
 
-                # Capturar los enlaces
-                post_links = await page.locator('article a').evaluate_all(
-                    "nodes => nodes.map(n => n.href)"
-                )
-
-                # Filtrar solo los que son posts reales (/p/)
-                final_links = list(dict.fromkeys([l for l in post_links if "/p/" in l]))[:10]
+                # Capturar links de posts
+                raw_links = await page.eval_on_selector_all("a[href*='/p/']", "nodes => nodes.map(n => n.href)")
+                final_links = list(dict.fromkeys([l for l in raw_links if "/p/" in l]))[:10]
 
                 if not final_links:
-                    print("[X] No se encontraron enlaces de posts. Revisa si la cuenta es pública.")
+                    print("[!] No se hallaron publicaciones en este perfil.")
                     return []
 
-                print(f"[+] ¡Éxito! Se encontraron {len(final_links)} posts. Extrayendo métricas...")
-
+                print(f"[*] Procesando {len(final_links)} publicaciones para extraer métricas y comentarios...")
+                results = []
                 for link in final_links:
-                    print(f"    - Analizando post: {link}")
-                    data = await DataParser.get_post_metrics(page, link)
-                    data.update(profile_stats)
-                    posts_data.append(data)
-                    await asyncio.sleep(random.uniform(2, 4))
+                    print(f"    - Analizando: {link}")
+                    post_data = await DataParser.get_post_metrics(page, link)
+                    results.append({**profile_data, **post_data})
+                    await asyncio.sleep(random.uniform(2, 5))
 
-                return posts_data
-
+                return results
             except Exception as e:
-                print(f"[-] Error durante el scraping: {e}")
+                print(f"[-] Error durante el proceso: {e}")
                 return []
             finally:
                 await browser.close()

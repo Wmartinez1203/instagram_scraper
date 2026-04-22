@@ -1,0 +1,5 @@
+echo ".idea/" > .gitignore
+echo "__pycache__/" >> .gitignore
+echo "session/" >> .gitignore
+echo "venv/" >> .gitignore
+echo "*.pyc" >> .gitignore
