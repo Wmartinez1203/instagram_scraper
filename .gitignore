@@ -1,19 +1,19 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-
-# Sesión y Seguridad (CRÍTICO)
+# Seguridad (Cookies y Sesiones)
 session/
 cookies.json
+*.json
+
+# Entorno de Python
+__pycache__/
+.venv/
+venv/
 .env
 
-# Datos y Reportes (Opcional si quieres subir ejemplos, pero mejor ignorarlos)
+# Reportes de datos
 data/
+*.xlsx
+*.csv
 
-# Herramientas de sistema
+# Herramientas de edición
 .idea/
 .vscode/
-*.log
