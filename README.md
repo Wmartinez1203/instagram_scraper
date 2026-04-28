@@ -31,12 +31,12 @@ Ejecución
     Ejecuta el scraper principal para recolectar información:
     ```bash
     py main.py
-    ```
+    
 **Fase 2: Visualización del Dashboard**
     Levanta el servidor web para analizar los resultados gráficamente:
     ```bash
     py -m streamlit run dashboard.py
-    ```
+   
 
 **📐 Arquitectura del Proyecto**
 El sistema sigue un diseño modular bajo el principio de responsabilidad única:
