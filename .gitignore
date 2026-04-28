@@ -1,5 +1,19 @@
-echo ".idea/" > .gitignore
-echo "__pycache__/" >> .gitignore
-echo "session/" >> .gitignore
-echo "venv/" >> .gitignore
-echo "*.pyc" >> .gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Sesión y Seguridad (CRÍTICO)
+session/
+cookies.json
+.env
+
+# Datos y Reportes (Opcional si quieres subir ejemplos, pero mejor ignorarlos)
+data/
+
+# Herramientas de sistema
+.idea/
+.vscode/
+*.log
